@@ -1,4 +1,5 @@
 #include "game.h"
+#include "input.h"
 
 game::game(int height, int width, string title) {
 	this->windowHeight = height;
@@ -14,6 +15,7 @@ void game::initWindow() {
 	this->window.create(sf::VideoMode(this->windowWidth, this->windowHeight), this->title);
 	sf::CircleShape shape(100.f);
 	shape.setFillColor(sf::Color::Green);
+	field test('f');
 
 	updateWindow(shape);
 }
