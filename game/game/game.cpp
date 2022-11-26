@@ -1,5 +1,5 @@
-#include "game.h"
-#include "input.h"
+#include "game.hpp"
+#include "input.hpp"
 
 game::game(int height, int width, string title) {
 	this->windowHeight = height;
@@ -13,14 +13,18 @@ game::~game() {
 
 void game::initWindow() {
 	this->window.create(sf::VideoMode(this->windowWidth, this->windowHeight), this->title);
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
-	field test('f');
-
-	updateWindow(shape);
+	updateWindow();
 }
 
-void game::updateWindow(sf::CircleShape& shape) {
+void game::updateWindow() {
+	sf::Font font;
+
+	if (!font.loadFromFile("Roboto-Medium.ttf")) {
+		cout << "failed to load font" << endl;
+	}
+
+	field test(sf::Color(255, 255, 255, 128), 400, 275, 1280 / 2 - 400 / 2, 720 / 2 - 275 / 2, font, "Test string");
+
 	while (this->window.isOpen()) {
 		sf::Event event;
 		while (this->window.pollEvent(event))
@@ -30,7 +34,11 @@ void game::updateWindow(sf::CircleShape& shape) {
 		}
 
 		this->window.clear();
-		this->window.draw(shape);
+
+		test.draw(this->window);
+		
+		
+		
 		this->window.display();
 	}
 }

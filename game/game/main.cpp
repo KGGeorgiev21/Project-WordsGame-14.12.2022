@@ -1,5 +1,5 @@
-#include "precompile.h"
-#include "game.h"
+#include "precompile.hpp"
+#include "game.hpp"
 
 int main()
 {

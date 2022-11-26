@@ -1,39 +1,32 @@
-#include "precompile.h"
-#include "input.h"
+#include "precompile.hpp"
+#include "input.hpp"
 
-field::field(char type) {
-	if (type == 's' || type == 'i') {
-		this->type = type;
-
-	}
-	else {
-		cerr << invalid_argument("Invalid field type").what();
-	}
+field::field(sf::Color bgColor, int sizeX, int sizeY, int posX, int posY, sf::Font& font, string text) 
+{
+	this->background.setFillColor(bgColor);
+	this->background.setSize(sf::Vector2f(sizeX, sizeY));
+	this->background.setPosition(sf::Vector2f(posX, posY));
+	this->text.setFont(font);
+	this->text.setCharacterSize(16);
+	this->text.setFillColor(sf::Color(255,255,255));
+	this->text.setString(text);
+	this->text.setPosition(sf::Vector2f(posX, posY));
 }
 
-field::~field() {
+field::~field() 
+{
 
 }
 
-void field::getInputString(string message) {
-	this->message = message;
+void field::setAnswer(string answer) {
+	this->answer = answer;
 }
 
-void field::getInputInt(int num) {
-	this->num = num;
+void field::draw(sf::RenderWindow& window) {
+	window.draw(this->background);
+	window.draw(this->text);
 }
 
-void field::setAnswerInt(int answer) {
-	this->answerNum = answer;
-}
-
-void field::setAnswerString(string answer) {
-	this->answerString = answer;
-}
-
-bool field::checkAnswer() {
-	if (this->type == 's') {
-
-	}
-	return true;
+bool field::checkAnswer(string input) {
+	return this->answer == input;
 }

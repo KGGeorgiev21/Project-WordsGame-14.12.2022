@@ -1,18 +1,20 @@
-#include "precompile.h"
+#include "precompile.hpp"
+#include "input.hpp"
 
 class game {
 private:
+	
 	sf::RenderWindow window;
-	int windowHeight = 0;
-	int windowWidth = 0;
-	string title = "";
+	int windowHeight;
+	int windowWidth;
+	string title;
 	
 public:
 	game(int height, int width, string title);
 	~game();
 
 	void initWindow();
-	void updateWindow(sf::CircleShape& shape);
+	void updateWindow();
 	void draw();
 
 };
