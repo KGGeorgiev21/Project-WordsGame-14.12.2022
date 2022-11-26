@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "input.hpp"
+#include "player.hpp"
 
 game::game(int height, int width, string title) {
 	this->windowHeight = height;
@@ -12,15 +13,19 @@ game::~game() {
 }
 
 void game::initWindow() {
-	this->window.create(sf::VideoMode(this->windowWidth, this->windowHeight), this->title);
+	this->window.create(sf::VideoMode(this->windowWidth, this->windowHeight), this->title, sf::Style::Close);
+	this->window.setFramerateLimit(240);
 	updateWindow();
 }
 
 void game::updateWindow() {
 	sf::Font font;
 	sf::Texture inputBgT;
+	sf::Clock clock;
+	sf::Time dt;
 	string answer;
 	bool shouldDisplayField = false;
+	bool shouldDisplayPlayer = true;
 
 	if (!font.loadFromFile("Roboto-Medium.ttf")) {
 		cout << "failed to load font" << endl;
@@ -31,6 +36,7 @@ void game::updateWindow() {
 	}
 
 	field test(sf::Color(255, 255, 255, 128), 400, 275, 1280 / 2 - 400 / 2, 720 / 2 - 275 / 2, 1.0f, 1.0f, font, "Test string", inputBgT);
+	player plr(1280 / 2 - 62 / 2, 720 / 2 - 200 / 2, 0, 20, 100);
 
 	test.setAnswer("test");
 
@@ -57,17 +63,21 @@ void game::updateWindow() {
 					cout << test.checkAnswer() << endl;
 					answer = "";
 				}
-				cout << event.key.code << endl;
 				test.input.setString(answer);
 			}
 		}
 
 		this->window.clear();
 
-		if (shouldDisplayField) {
+		if (shouldDisplayField) 
 			test.draw(this->window);
-		}
+
+		if (shouldDisplayPlayer)
+			plr.update(event, dt.asSeconds());
+			plr.draw(this->window);
 		
 		this->window.display();
+
+		dt = clock.restart();
 	}
 }

@@ -15,5 +15,4 @@ public:
 
 	void initWindow();
 	void updateWindow();
-	void draw();
 };
