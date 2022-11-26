@@ -5,16 +5,24 @@ class field {
 protected:
 	string answer;
 	
-	sf::Text text;
-	sf::RectangleShape background;
+	struct QNA{
+		string question;
+		string answer;
+	};
+
+	vector<QNA> QNAV;
+	
+	sf::Text question;
+	sf::Sprite background;
 
 public:
-	field(sf::Color bgColor, int sizeX, int sizeY, int posX, int posY, sf::Font& font, string text);
+	field(sf::Color bgColor, int sizeX, int sizeY, int posX, int posY, float scaleX, float scaleY, sf::Font& font, string text, sf::Texture& backgroundTexture);
+	sf::Text input;
 
 	void setAnswer(string answer);
 	void draw(sf::RenderWindow& window);
 
-	bool checkAnswer(string input);
+	bool checkAnswer();
 
 	~field();
 };

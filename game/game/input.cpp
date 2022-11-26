@@ -1,16 +1,26 @@
 #include "precompile.hpp"
 #include "input.hpp"
 
-field::field(sf::Color bgColor, int sizeX, int sizeY, int posX, int posY, sf::Font& font, string text) 
+field::field(sf::Color bgColor, int sizeX, int sizeY, int posX, int posY, float scaleX, float scaleY, sf::Font& font, string text, sf::Texture& backgroundTexture) 
 {
-	this->background.setFillColor(bgColor);
-	this->background.setSize(sf::Vector2f(sizeX, sizeY));
+	this->background.setTexture(backgroundTexture);
 	this->background.setPosition(sf::Vector2f(posX, posY));
-	this->text.setFont(font);
-	this->text.setCharacterSize(16);
-	this->text.setFillColor(sf::Color(255,255,255));
-	this->text.setString(text);
-	this->text.setPosition(sf::Vector2f(posX, posY));
+	this->background.setScale(scaleX, scaleY);
+	this->question.setFont(font);
+	this->question.setCharacterSize(24);
+	this->question.setFillColor(sf::Color(255,255,255));
+	this->question.setString(text);
+	this->question.setPosition(sf::Vector2f(posX + sizeX / 10, posY + sizeY / 8));
+	this->input.setFont(font);
+	this->input.setCharacterSize(20);
+	this->input.setFillColor(sf::Color(255, 255, 255));
+	this->input.setPosition(posX + sizeX / 10, (posY + sizeY) - sizeY / 3 + sizeY / 7);
+
+	this->QNAV = {
+		{"", ""},
+		{"", ""},
+		
+	};
 }
 
 field::~field() 
@@ -24,9 +34,10 @@ void field::setAnswer(string answer) {
 
 void field::draw(sf::RenderWindow& window) {
 	window.draw(this->background);
-	window.draw(this->text);
+	window.draw(this->question);
+	window.draw(this->input);
 }
 
-bool field::checkAnswer(string input) {
-	return this->answer == input;
+bool field::checkAnswer() {
+	return this->answer == this->input.getString();
 }
