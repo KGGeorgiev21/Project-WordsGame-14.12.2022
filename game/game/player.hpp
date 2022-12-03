@@ -18,5 +18,8 @@ public:
 
 	void update(sf::Event& event, float dt);
 	void draw(sf::RenderWindow& window);
+	void setPos(sf::Vector2f pos);
+	void setRotation(int degrees);
 
+	sf::Vector2f getPos();
 };

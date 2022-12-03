@@ -1,53 +1,39 @@
 #include "game.hpp"
-#include "input.hpp"
-#include "player.hpp"
 
-game::game(int height, int width, string title) {
+// set variables for window details
+gameClass::gameClass(int height, int width, string title) {
 	this->windowHeight = height;
 	this->windowWidth = width;
 	this->title = title;
 }
 
-game::~game() {
+gameClass::~gameClass() {
 
 }
 
-void game::initWindow() {
-	this->window.create(sf::VideoMode(this->windowWidth, this->windowHeight), this->title, sf::Style::Close);
-	this->window.setFramerateLimit(240);
-	updateWindow();
-}
+// draw the fight scene
+void gameClass::drawFight(player& plr, sf::Event& event, field& inputField) {
+	// vars for fight
+	// fight logic
+	// win/loss condition
+	// rewards
+	// animations
 
-void game::updateWindow() {
-	sf::Font font;
-	sf::Texture inputBgT;
-	sf::Clock clock;
-	sf::Time dt;
+	bool fightEnded = false;
+	bool shouldDisplayField = true;
+	int row = 0;
 	string answer;
-	bool shouldDisplayField = false;
-	bool shouldDisplayPlayer = true;
 
-	if (!font.loadFromFile("Roboto-Medium.ttf")) {
-		cout << "failed to load font" << endl;
-	}
+	plr.setPos(sf::Vector2f(167, 539));
 
-	if (!inputBgT.loadFromFile("assets/crate1.png")) {
-		cout << "failed to load crate1.png" << endl;
-	}
+	inputField.setQuestion(row);
 
-	field test(sf::Color(255, 255, 255, 128), 400, 275, 1280 / 2 - 400 / 2, 720 / 2 - 275 / 2, 1.0f, 1.0f, font, "Test string", inputBgT);
-	player plr(1280 / 2 - 62 / 2, 720 / 2 - 200 / 2, 0, 20, 100);
+	while (this->window.isOpen() && !fightEnded) {
+		this->window.pollEvent(event);
 
-	test.setAnswer("test");
+		if (event.type == sf::Event::KeyPressed) {
 
-	while (this->window.isOpen()) {
-		sf::Event event;
-		while (this->window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				this->window.close();
-
-			if (event.type == sf::Event::KeyPressed) {
+			if (shouldDisplayField) {
 				if (event.key.code >= 0 && event.key.code < 26) {
 					answer += (char)(event.key.code + 97);
 				}
@@ -60,21 +46,89 @@ void game::updateWindow() {
 					}
 				}
 				else if (event.key.code == sf::Keyboard::Enter) {
-					cout << test.checkAnswer() << endl;
+					if (inputField.checkAnswer(row)) {
+						fightEnded = true;
+					}
 					answer = "";
 				}
-				test.input.setString(answer);
+				inputField.input.setString(answer);
+			}
+		}
+		this->window.clear();
+
+		plr.draw(this->window);
+
+		if (shouldDisplayField)
+			inputField.draw(this->window);
+
+		this->window.display();
+	}
+
+}
+
+// initialize the window with given values
+void gameClass::initWindow() {
+	this->window.create(sf::VideoMode(this->windowWidth, this->windowHeight), this->title, sf::Style::Close);
+	this->window.setFramerateLimit(240);
+	updateWindow();
+}
+
+// update the window
+// handles main game logic and stores variables
+void gameClass::updateWindow() {
+	sf::Text confirmation;
+	sf::Font font;
+	sf::Sprite gameMap;
+	sf::Sprite npc;
+	sf::Texture inputBgT;
+	sf::Texture gameMapT;
+	sf::Texture npcT;
+	sf::Clock clock;
+	sf::Time dt;
+
+	if (!font.loadFromFile("Roboto-Medium.ttf")) {
+		cout << "failed to load font" << endl;
+	}
+	else if (!inputBgT.loadFromFile("assets/crate1.png")) {
+		cout << "failed to load crate1.png" << endl;
+	}
+	else if (!gameMapT.loadFromFile("assets/map.png")) {
+		cout << "failed to load map.png" << endl;
+	}
+	else if (!npcT.loadFromFile("assets/npc1.png")) {
+		cout << "failed to load Nestashev.png" << endl;
+	}
+
+	gameMap.setTexture(gameMapT);
+	npc.setTexture(npcT);
+	npc.setOrigin(46/2, 112);
+	npc.setPosition(794, 539);
+
+	field inputField(sf::Color(255, 255, 255, 128), 400, 275, 1280 / 2 - 400 / 2, 720 / 2 - 275 / 2, 1.0f, 1.0f, font, inputBgT);
+	player plr(1280 / 2, 539, 0, 20, 100);
+
+
+	while (this->window.isOpen()) {
+		sf::Event event;
+		while (this->window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				this->window.close();
+
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.code == sf::Keyboard::E && (plr.getPos().x > npc.getPosition().x - 63 && plr.getPos().x < npc.getPosition().x + 63)) {
+					this->drawFight(plr, event, inputField);
+				}
 			}
 		}
 
 		this->window.clear();
 
-		if (shouldDisplayField) 
-			test.draw(this->window);
+		this->window.draw(gameMap);
+		this->window.draw(npc);
 
-		if (shouldDisplayPlayer)
-			plr.update(event, dt.asSeconds());
-			plr.draw(this->window);
+		plr.update(event, dt.asSeconds());
+		plr.draw(this->window);
 		
 		this->window.display();
 

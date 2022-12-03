@@ -3,7 +3,7 @@
 
 int main()
 {
-    game game(720, 1280, "Test");
+    gameClass game(720, 1280, "Test");
 
     game.initWindow();
     return 0;

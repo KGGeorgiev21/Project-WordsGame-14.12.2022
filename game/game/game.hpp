@@ -1,7 +1,8 @@
 #include "precompile.hpp"
 #include "input.hpp"
+#include "player.hpp"
 
-class game {
+class gameClass {
 private:
 	
 	sf::RenderWindow window;
@@ -10,9 +11,11 @@ private:
 	string title;
 	
 public:
-	game(int height, int width, string title);
-	~game();
+	gameClass(int height, int width, string title);
+	~gameClass();
 
 	void initWindow();
 	void updateWindow();
+
+	void drawFight(player& plr, sf::Event& event, field& inputField);
 };
