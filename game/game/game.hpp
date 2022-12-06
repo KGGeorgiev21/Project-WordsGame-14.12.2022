@@ -1,6 +1,7 @@
 #include "precompile.hpp"
 #include "input.hpp"
 #include "player.hpp"
+#include "enemy.hpp"
 
 class gameClass {
 private:
@@ -15,7 +16,7 @@ public:
 	~gameClass();
 
 	void initWindow();
-	void updateWindow();
+	void mainScene();
 
-	void drawFight(player& plr, sf::Event& event, field& inputField);
+	void fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clock& clock, int npcNum);
 };

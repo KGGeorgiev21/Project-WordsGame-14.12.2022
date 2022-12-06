@@ -1,7 +1,7 @@
 #include "player.hpp"
 
 // initialize the player with given values
-player::player(int posX, int posY, int money, int attack, int maxHp) {
+player::player(float posX, float posY, int money, int attack, int maxHp) {
 	this->posX = posX;
 	this->posY = posY;
 	this->money = money;
@@ -39,10 +39,36 @@ void player::setPos(sf::Vector2f pos) {
 	this->plrBod.setPosition(pos.x, pos.y);
 }
 
+void player::move(sf::Vector2f offset) {
+	this->plrBod.move(offset);
+}
+
 // set rotation of player sprite
 // 0 to reset
-void player::setRotation(int degrees) {
+void player::setRotation(float degrees) {
 	this->plrBod.setRotation(degrees);
+}
+
+void player::rotate(float degrees) {
+	this->plrBod.rotate(degrees);
+}
+
+void player::setSize(sf::Vector2f size) {
+	this->plrBod.setSize(size);
+}
+
+bool player::takeDamage(int damage) {
+	this->hp -= damage;
+	cout << "Player hp: " << this->hp << endl;
+
+	if (this->hp <= 0) {
+		return true;
+	}
+	return false;
+}
+
+float player::getRotation() {
+	return this->plrBod.getRotation();
 }
 
 // get position of player sprite

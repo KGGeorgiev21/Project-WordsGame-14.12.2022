@@ -4,8 +4,8 @@
 class field {
 protected:
 	struct QNA{
-		string question;
-		string answer;
+		wstring question;
+		wstring answer;
 	};
 
 	vector<QNA> QNAV;
@@ -14,7 +14,7 @@ protected:
 	sf::Sprite background;
 
 public:
-	field(sf::Color bgColor, int sizeX, int sizeY, int posX, int posY, float scaleX, float scaleY, sf::Font& font, sf::Texture& backgroundTexture);
+	field(sf::Color bgColor, int sizeX, int sizeY, float posX, float posY, float scaleX, float scaleY, sf::Font& font, sf::Texture& backgroundTexture);
 	sf::Text input;
 
 	void draw(sf::RenderWindow& window);
