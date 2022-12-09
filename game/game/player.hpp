@@ -19,12 +19,13 @@ public:
 	~player();
 
 	void update(sf::Event& event, float dt);
-	void draw(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window, bool inFight);
 	void setPos(sf::Vector2f pos);
 	void move(sf::Vector2f offset);
 	void setSize(sf::Vector2f size);
 	void setRotation(float degrees);
 	void rotate(float degrees);
+	void resetHp();
 	bool takeDamage(int damage);
 	float getRotation();
 

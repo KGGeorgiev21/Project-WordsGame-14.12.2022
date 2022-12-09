@@ -19,7 +19,7 @@ public:
 
 	void setPos(sf::Vector2f pos);
 	void move(sf::Vector2f offset);
-	void draw(sf::RenderWindow& window);
+	void draw(sf::RenderWindow& window, bool inFight);
 	bool takeDamage(int damage);
 	void setRotation(float angle);
 	void rotate(float angle);

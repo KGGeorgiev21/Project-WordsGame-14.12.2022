@@ -35,9 +35,11 @@ void player::update(sf::Event& event, float dt) {
 }
 
 // draw the player to the screen
-void player::draw(sf::RenderWindow& window) {
+void player::draw(sf::RenderWindow& window, bool inFight) {
 	window.draw(this->plrBod);
-	window.draw(this->healthBar);
+	if (inFight) {
+		window.draw(this->healthBar);
+	}
 }
 
 // set position of player sprite
@@ -63,13 +65,19 @@ void player::setSize(sf::Vector2f size) {
 	this->plrBod.setSize(size);
 }
 
+void player::resetHp() {
+	this->hp = this->maxHp;
+
+	this->healthBar.setSize(sf::Vector2f(200, 24));
+}
+
 bool player::takeDamage(int damage) {
 	this->hp -= damage;
 	cout << "Player hp: " << this->hp << endl;
 
 	if (this->hp <= 0) {
 		this->healthBar.setSize(sf::Vector2f(200, 24));
-		this->healthBar.setPosition(sf::Vector2f(990, 144));
+		this->healthBar.setPosition(sf::Vector2f(240 + 62.5/2, 415));
 		return true;
 	}
 

@@ -5,7 +5,7 @@ enemy::enemy(int maxHp, int attack) {
 	this->attack = attack;
 	this->hp = this->maxHp;
 
-	this->enemyBod.setFillColor(sf::Color::White);
+	this->enemyBod.setFillColor(sf::Color::Red);
 	this->enemyBod.setSize(sf::Vector2f(100, 160));
 	this->enemyBod.setOrigin(50, 160);
 	this->enemyBod.setPosition(sf::Vector2f(1230, 334));
@@ -28,9 +28,11 @@ void enemy::move(sf::Vector2f offset) {
 	this->enemyBod.move(offset);
 }
 
-void enemy::draw(sf::RenderWindow& window) {
+void enemy::draw(sf::RenderWindow& window, bool inFight) {
 	window.draw(this->enemyBod);
-	window.draw(this->healthBar);
+	if (inFight) {
+		window.draw(this->healthBar);
+	}
 }
 
 bool enemy::takeDamage(int damage) {

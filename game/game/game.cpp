@@ -27,9 +27,9 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 	bool fightEnded = false;
 	bool shouldDisplayField = false;
 	bool inPos = false;
-	//char animateRotation = 'f';
-	//int rotation = 0;
-	int row = rand() % 15;
+	char animateRotation = 'f';
+	int rotatePart = 1;
+	int row = rand() % 16;
 	wstring answer;
 
 	enemy enemy(npcNum * npcNum * 100, npcNum * 20);
@@ -54,12 +54,60 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 			shouldDisplayField = true;
 		}
 
-		//if (animateRotation != 'f') {
-		//	rotation = 45 * dt.asSeconds();
+		while (animateRotation != 'f') {
+			if (animateRotation == 'e') {
+				switch (rotatePart) {
+				case 1:
+					plr.rotate(dt.asSeconds() * 45 * 8);
+					if (plr.getRotation() > 45) {
+						plr.setRotation(45);
+						rotatePart = 2;
+					}
+					break;
+				case 2:
+					plr.rotate(dt.asSeconds() * -45 * 16);
+					if (plr.getRotation() > 100) {
+						plr.setRotation(0);
+						rotatePart = 1;
+						animateRotation = 'f';
+					}
+					break;
+				}
+			}
+			if (animateRotation == 'p') {
+				switch (rotatePart) {
+				case 1:
+					plr.rotate(dt.asSeconds() * -45 * 16);
+					cout << plr.getRotation() << endl;
+					if (plr.getRotation() > 315) {
+						plr.setRotation(315);
+						rotatePart = 2;
+					}
+					break;
+				case 2:
+					plr.rotate(dt.asSeconds() * 45 * 8);
+					if (plr.getRotation() > 0 && plr.getRotation() < 180) {
+						plr.setRotation(0);
+						rotatePart = 1;
+						animateRotation = 'f';
+					}
+					break;
+				}
+			}
 
-		//	plr.rotate(rotation);
+			this->window.clear();
 
-		//}
+			plr.draw(this->window, true);
+			enemy.draw(this->window, true);
+
+
+			if (shouldDisplayField)
+				inputField.draw(this->window);
+
+			this->window.display();
+
+			dt = clock.restart();
+		}
 
 		// while looking through event list
 		while (this->window.pollEvent(event)) {
@@ -77,7 +125,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 								plr.money += npcNum * npcNum * 25;
 							}
 							else {
-								//animateRotation = 'e';
+								animateRotation = 'e';
 							}
 						}
 						else {
@@ -85,10 +133,11 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 							if (dead) {
 								fightEnded = true;
 								plr.setSize(sf::Vector2f(62.5, 100));
+								plr.takeDamage(1);
 
 							}
 							else {
-								//animateRotation = 'p';
+								animateRotation = 'p';
 							}
 						}
 					}
@@ -96,7 +145,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 						enemy.takeDamage(100000);
 						plr.money += npcNum * npcNum * 25;
 					}
-					row = 15;
+					row = rand() % 16;
 					inputField.setQuestion(row);
 					answer = L"";
 				}
@@ -128,8 +177,8 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 
 		this->window.clear();
 
-		plr.draw(this->window);
-		enemy.draw(this->window);
+		plr.draw(this->window, true);
+		enemy.draw(this->window, true);
 
 
 		if (shouldDisplayField)
@@ -204,7 +253,7 @@ void gameClass::mainScene() {
 		this->window.draw(npc);
 
 		plr.update(event, dt.asSeconds());
-		plr.draw(this->window);
+		plr.draw(this->window, false);
 
 		this->window.display();
 
