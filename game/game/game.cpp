@@ -34,7 +34,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 
 	enemy enemy(npcNum * npcNum * 100, npcNum * 20);
 
-	plr.setPos(sf::Vector2f(62.5/2, 539));
+	plr.setPos(sf::Vector2f(62.5 / 2, 539));
 	plr.setSize(sf::Vector2f(62.5 * 2, 100 * 2));
 
 	// set the question
@@ -77,16 +77,18 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 								plr.money += npcNum * npcNum * 25;
 							}
 							else {
-								animateRotation = 'e';
+								//animateRotation = 'e';
 							}
 						}
 						else {
 							bool dead = plr.takeDamage(enemy.attack);
 							if (dead) {
 								fightEnded = true;
+								plr.setSize(sf::Vector2f(62.5, 100));
+
 							}
 							else {
-								animateRotation = 'p';
+								//animateRotation = 'p';
 							}
 						}
 					}
@@ -118,8 +120,12 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 				inputField.input.setString(answer);
 			}
 
+			else if (event.type == sf::Event::Closed) {
+				this->window.close();
+			}
+
 		}
-		
+
 		this->window.clear();
 
 		plr.draw(this->window);
@@ -171,7 +177,7 @@ void gameClass::mainScene() {
 
 	gameMap.setTexture(gameMapT);
 	npc.setTexture(npcT);
-	npc.setOrigin(46/2, 112);
+	npc.setOrigin(46 / 2, 112);
 	npc.setPosition(794, 539);
 
 	field inputField(sf::Color(255, 255, 255, 128), 400, 275, 1280 / 2 - 400 / 2, 720 / 2 - 275 / 2, 1.0f, 1.0f, font, inputBgT);
@@ -199,7 +205,7 @@ void gameClass::mainScene() {
 
 		plr.update(event, dt.asSeconds());
 		plr.draw(this->window);
-		
+
 		this->window.display();
 
 		dt = clock.restart();

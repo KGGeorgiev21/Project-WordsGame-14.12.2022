@@ -11,8 +11,13 @@ player::player(float posX, float posY, int money, int attack, int maxHp) {
 	this->speed = 250;
 
 	this->plrBod.setSize(sf::Vector2f(62.5, 100));
-	this->plrBod.setOrigin(62.5/2, 100);
+	this->plrBod.setOrigin(62.5 / 2, 100);
 	this->plrBod.setPosition(posX, posY);
+
+	this->healthBar.setFillColor(sf::Color(0, 252, 36));
+	this->healthBar.setSize(sf::Vector2f(200, 24));
+	this->healthBar.setOrigin(100, 12);
+	this->healthBar.setPosition(sf::Vector2f(240 + 62.5 / 2, 415));
 }
 
 player::~player() {
@@ -32,6 +37,7 @@ void player::update(sf::Event& event, float dt) {
 // draw the player to the screen
 void player::draw(sf::RenderWindow& window) {
 	window.draw(this->plrBod);
+	window.draw(this->healthBar);
 }
 
 // set position of player sprite
@@ -62,8 +68,14 @@ bool player::takeDamage(int damage) {
 	cout << "Player hp: " << this->hp << endl;
 
 	if (this->hp <= 0) {
+		this->healthBar.setSize(sf::Vector2f(200, 24));
+		this->healthBar.setPosition(sf::Vector2f(990, 144));
 		return true;
 	}
+
+	this->healthBar.setSize(sf::Vector2f(this->healthBar.getSize().x - damage * 2, this->healthBar.getSize().y));
+	this->healthBar.move(sf::Vector2f(damage, 0));
+
 	return false;
 }
 

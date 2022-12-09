@@ -1,9 +1,11 @@
+
 #pragma once
 #include "precompile.hpp"
 
 class enemy {
 protected:
 	sf::RectangleShape enemyBod;
+	sf::RectangleShape healthBar;
 
 	int maxHp;
 

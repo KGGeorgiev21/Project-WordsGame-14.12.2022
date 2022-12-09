@@ -3,6 +3,7 @@
 class player {
 protected:
 	sf::RectangleShape plrBod;
+	sf::RectangleShape healthBar;
 
 	int maxHp;
 	int speed;
