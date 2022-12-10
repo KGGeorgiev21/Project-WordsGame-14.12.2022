@@ -14,12 +14,12 @@ gameClass::~gameClass() {
 }
 
 // draw the fight scene
-void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clock& clock, int npcNum) {
+void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clock& clock, int npcNum, sf::Text& money, sf::Texture& texture) {
 	// vars for fight - done
 	// fight logic - done
 	// win/loss condition - done
 	// rewards - done
-	// animations - 
+	// animations - almost done
 
 	// set random rand seed
 	srand((int)time(0));
@@ -32,7 +32,9 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 	int row = rand() % 16;
 	wstring answer;
 
-	enemy enemy(npcNum * npcNum * 100, npcNum * 20);
+
+
+	enemy enemy(npcNum * npcNum * 100, npcNum * 20, texture);
 
 	plr.setPos(sf::Vector2f(62.5 / 2, 539));
 	plr.setSize(sf::Vector2f(62.5 * 2, 100 * 2));
@@ -46,11 +48,14 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 	while (this->window.isOpen() && !fightEnded) {
 		// enter animation
 		if (plr.getPos().x < 240) {
-			plr.move(sf::Vector2f(240 * 3 * dt.asSeconds(), 0));
-			enemy.move(sf::Vector2f(-275 * 3 * dt.asSeconds(), 0));
+			plr.move(sf::Vector2f(240 * 5 * dt.asSeconds(), 0));
+			enemy.move(sf::Vector2f(-275 * 5 * dt.asSeconds(), 0));
 		}
 		else if (inPos == false) {
 			inPos = true;
+			cout << enemy.getPos().x;
+			plr.setPos(sf::Vector2f(240, 539));
+			enemy.setPos(sf::Vector2f(990, 334));
 			shouldDisplayField = true;
 		}
 
@@ -58,7 +63,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 			if (animateRotation == 'e') {
 				switch (rotatePart) {
 				case 1:
-					plr.rotate(dt.asSeconds() * 45 * 8);
+					plr.rotate(dt.asSeconds() * 45 * 20);
 					if (plr.getRotation() > 45) {
 						plr.setRotation(45);
 						rotatePart = 2;
@@ -77,17 +82,16 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 			if (animateRotation == 'p') {
 				switch (rotatePart) {
 				case 1:
-					plr.rotate(dt.asSeconds() * -45 * 16);
-					cout << plr.getRotation() << endl;
-					if (plr.getRotation() > 315) {
-						plr.setRotation(315);
+					enemy.rotate(dt.asSeconds() * -45 * 20);
+					if (enemy.getRotation() > 315) {
+						enemy.setRotation(315);
 						rotatePart = 2;
 					}
 					break;
 				case 2:
-					plr.rotate(dt.asSeconds() * 45 * 8);
-					if (plr.getRotation() > 0 && plr.getRotation() < 180) {
-						plr.setRotation(0);
+					enemy.rotate(dt.asSeconds() * 45 * 16);
+					if (enemy.getRotation() > 0 && enemy.getRotation() < 180) {
+						enemy.setRotation(0);
 						rotatePart = 1;
 						animateRotation = 'f';
 					}
@@ -99,7 +103,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 
 			plr.draw(this->window, true);
 			enemy.draw(this->window, true);
-
+			this->window.draw(money);
 
 			if (shouldDisplayField)
 				inputField.draw(this->window);
@@ -113,7 +117,6 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 		while (this->window.pollEvent(event)) {
 			// if any text is entered
 			if (event.type == event.TextEntered) {
-				cout << event.text.unicode << endl;
 
 				// if enter is pressed
 				if (event.text.unicode == 13) {
@@ -123,10 +126,9 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 
 							if (dead) {
 								plr.money += npcNum * npcNum * 25;
+								money.setString("$" + to_string(plr.money));
 							}
-							else {
-								animateRotation = 'e';
-							}
+							animateRotation = 'e';
 						}
 						else {
 							bool dead = plr.takeDamage(enemy.attack);
@@ -136,14 +138,14 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 								plr.takeDamage(1);
 
 							}
-							else {
-								animateRotation = 'p';
-							}
+							animateRotation = 'p';
 						}
 					}
 					else {
 						enemy.takeDamage(100000);
 						plr.money += npcNum * npcNum * 25;
+						money.setString("$" + to_string(plr.money));
+						animateRotation = 'e';
 					}
 					row = rand() % 16;
 					inputField.setQuestion(row);
@@ -179,7 +181,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 
 		plr.draw(this->window, true);
 		enemy.draw(this->window, true);
-
+		this->window.draw(money);
 
 		if (shouldDisplayField)
 			inputField.draw(this->window);
@@ -202,36 +204,45 @@ void gameClass::initWindow() {
 // handles main game logic and stores variables
 void gameClass::mainScene() {
 	sf::Text confirmation;
+	sf::Text money;
 	sf::Font font;
 	sf::Sprite gameMap;
-	sf::Sprite npc;
 	sf::Texture inputBgT;
 	sf::Texture gameMapT;
 	sf::Texture npcT;
+	sf::Texture bossT;
 	sf::Clock clock;
 	sf::Time dt;
 
 	if (!font.loadFromFile("font.ttf")) {
 		cout << "failed to load font" << endl;
 	}
-	else if (!inputBgT.loadFromFile("assets/crate1.png")) {
+	if (!inputBgT.loadFromFile("assets/crate1.png")) {
 		cout << "failed to load crate1.png" << endl;
 	}
-	else if (!gameMapT.loadFromFile("assets/map.png")) {
+	if (!gameMapT.loadFromFile("assets/map.png")) {
 		cout << "failed to load map.png" << endl;
 	}
-	else if (!npcT.loadFromFile("assets/npc1.png")) {
-		cout << "failed to load Nestashev.png" << endl;
+	if (!npcT.loadFromFile("assets/npc1.png")) {
+		cout << "failed to load npc1.png" << endl;
+	}
+	if (!bossT.loadFromFile("assets/boss.png")) {
+		cout << "failed to load boss.png" << endl;
 	}
 
 	gameMap.setTexture(gameMapT);
-	npc.setTexture(npcT);
-	npc.setOrigin(46 / 2, 112);
-	npc.setPosition(794, 539);
+	money.setFont(font);
+	money.setPosition(60,30);
+	money.setCharacterSize(34);
+	money.setFillColor(sf::Color(255, 220, 0));
 
 	field inputField(sf::Color(255, 255, 255, 128), 400, 275, 1280 / 2 - 400 / 2, 720 / 2 - 275 / 2, 1.0f, 1.0f, font, inputBgT);
 	player plr(1280 / 2, 539, 0, 20, 100);
+	npc npc1(npcT, 2, 0.3, sf::Vector2f(794, 539));
+	npc npc2(npcT, 2, 0.3, sf::Vector2f(994, 539));
+	npc boss(bossT, 2, 0.3, sf::Vector2f(1194, 539));
 
+	money.setString("$" + to_string(plr.money));
 
 	while (this->window.isOpen()) {
 		sf::Event event;
@@ -241,8 +252,16 @@ void gameClass::mainScene() {
 				this->window.close();
 
 			if (event.type == sf::Event::KeyPressed) {
-				if (event.key.code == sf::Keyboard::E && (plr.getPos().x > npc.getPosition().x - 63 && plr.getPos().x < npc.getPosition().x + 63)) {
-					this->fightScene(plr, inputField, dt, clock, 1);
+				if (event.key.code == sf::Keyboard::E) {
+					if (plr.getPos().x > npc1.body.getPosition().x - 63 && plr.getPos().x < npc1.body.getPosition().x + 63) {
+						this->fightScene(plr, inputField, dt, clock, 1, money, npcT);
+					}
+					else if (plr.getPos().x > npc2.body.getPosition().x - 63 && plr.getPos().x < npc2.body.getPosition().x + 63) {
+						this->fightScene(plr, inputField, dt, clock, 2, money, npcT);
+					}
+					else if (plr.getPos().x > boss.body.getPosition().x - 63 && plr.getPos().x < boss.body.getPosition().x + 63) {
+						this->fightScene(plr, inputField, dt, clock, 3, money, bossT);
+					}
 				}
 			}
 		}
@@ -250,7 +269,15 @@ void gameClass::mainScene() {
 		this->window.clear();
 
 		this->window.draw(gameMap);
-		this->window.draw(npc);
+
+		npc1.update(dt);
+		npc2.update(dt);
+		boss.update(dt);
+
+		npc1.draw(this->window);
+		npc2.draw(this->window);
+		boss.draw(this->window);
+		this->window.draw(money);
 
 		plr.update(event, dt.asSeconds());
 		plr.draw(this->window, false);

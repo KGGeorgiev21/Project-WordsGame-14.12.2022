@@ -1,16 +1,22 @@
 #include "enemy.hpp"
 
-enemy::enemy(int maxHp, int attack) {
+enemy::enemy(int maxHp, int attack, sf::Texture& texture) {
 	this->maxHp = maxHp;
 	this->attack = attack;
 	this->hp = this->maxHp;
+	
+	this->uvRect.width = texture.getSize().x / 2;
+	this->uvRect.height = texture.getSize().y;
+	this->uvRect.left = 0;
+	this->uvRect.top = 0;
 
-	this->enemyBod.setFillColor(sf::Color::Red);
-	this->enemyBod.setSize(sf::Vector2f(100, 160));
-	this->enemyBod.setOrigin(50, 160);
+	this->enemyBod.setTexture(&texture);
+	this->enemyBod.setTextureRect(this->uvRect);
+	this->enemyBod.setSize(sf::Vector2f(90, 116));
+	this->enemyBod.setOrigin(45, 116);
 	this->enemyBod.setPosition(sf::Vector2f(1230, 334));
 
-	this->healthBar.setFillColor(sf::Color(0, 252, 36));
+	this->healthBar.setFillColor(sf::Color(163, 255, 0));
 	this->healthBar.setSize(sf::Vector2f(200, 24));
 	this->healthBar.setOrigin(100, 12);
 	this->healthBar.setPosition(sf::Vector2f(990, 144));
@@ -38,18 +44,24 @@ void enemy::draw(sf::RenderWindow& window, bool inFight) {
 bool enemy::takeDamage(int damage) {
 	this->hp -= damage;
 
-	if (this->hp <= 0) {
+	cout << (this->hp / this->maxHp) * 100 << endl;
+
+	if ((this->hp / this->maxHp) * 100 <= 0) {
 		this->hp = maxHp;
-		cout << "Enemy dead" << endl;
 		this->healthBar.setSize(sf::Vector2f(200, 24));
 		this->healthBar.setPosition(sf::Vector2f(990, 144));
+		this->healthBar.setFillColor(sf::Color(163, 255, 0));
 		return true;
 	}
+	else if ((this->hp / this->maxHp) * 100 <= 35) {
+		this->healthBar.setFillColor(sf::Color(255, 78, 0));
+	}
+	else if ((this->hp / this->maxHp) * 100 <= 65) {
+		this->healthBar.setFillColor(sf::Color(255, 220, 0));
+	}
 
-	this->healthBar.setSize(sf::Vector2f(this->healthBar.getSize().x - damage * 2, this->healthBar.getSize().y));
-	this->healthBar.move(sf::Vector2f(damage, 0));
-
-	cout << "Enemy hp: " << this->hp << endl;
+	this->healthBar.move(sf::Vector2f(damage / (this->maxHp / 100), 0));
+	this->healthBar.setSize(sf::Vector2f(200 * (this->hp / this->maxHp), this->healthBar.getSize().y));
 
 	return false;
 }

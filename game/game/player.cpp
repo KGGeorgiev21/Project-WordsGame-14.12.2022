@@ -65,20 +65,21 @@ void player::setSize(sf::Vector2f size) {
 	this->plrBod.setSize(size);
 }
 
-void player::resetHp() {
-	this->hp = this->maxHp;
-
-	this->healthBar.setSize(sf::Vector2f(200, 24));
-}
-
 bool player::takeDamage(int damage) {
 	this->hp -= damage;
-	cout << "Player hp: " << this->hp << endl;
 
-	if (this->hp <= 0) {
+	if ((this->hp / this->maxHp) * 100 <= 0) {
+		this->hp = maxHp;
 		this->healthBar.setSize(sf::Vector2f(200, 24));
-		this->healthBar.setPosition(sf::Vector2f(240 + 62.5/2, 415));
+		this->healthBar.setPosition(sf::Vector2f(240 + 62.5 / 2, 415));
+		this->healthBar.setFillColor(sf::Color(163, 255, 0));
 		return true;
+	}
+	else if ((this->hp / this->maxHp) * 100 <= 35) {
+		this->healthBar.setFillColor(sf::Color(255, 78, 0));
+	}
+	else if ((this->hp / this->maxHp) * 100 <= 65) {
+		this->healthBar.setFillColor(sf::Color(255, 220, 0));
 	}
 
 	this->healthBar.setSize(sf::Vector2f(this->healthBar.getSize().x - damage * 2, this->healthBar.getSize().y));

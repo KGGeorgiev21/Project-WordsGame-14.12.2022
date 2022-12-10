@@ -2,6 +2,7 @@
 #include "input.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
+#include "npc.hpp"
 
 class gameClass {
 private:
@@ -18,5 +19,5 @@ public:
 	void initWindow();
 	void mainScene();
 
-	void fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clock& clock, int npcNum);
+	void fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clock& clock, int npcNum, sf::Text& money, sf::Texture& texture);
 };

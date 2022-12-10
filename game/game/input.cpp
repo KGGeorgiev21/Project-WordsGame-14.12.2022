@@ -16,26 +16,23 @@ field::field(sf::Color bgColor, int sizeX, int sizeY, float posX, float posY, fl
 	this->input.setFillColor(sf::Color(255, 255, 255));
 	this->input.setPosition(480 + 20, 400);
 
-	cout << this->question.getPosition().x << " " << this->question.getPosition().y << endl;
-	cout << this->input.getPosition().x << " " << this->input.getPosition().y << endl;
-
 
 	this->QNAV = {
 		{L"Как се пише \nбо_ \nб или п ? ", L"б"},
 		{L"Как се пише \nду_ликат \nб или п?", L"б"},
 		{L"Как се пише \nвкъ_и \nшт или щ?",L"щ"},
 		{L"Как се пише \nинж_нер\nи или е?",L"е"},
-		{L"Как се пише \nпиц_рия \nа или ъ?",L"а"},
+		{L"Как се пише \nпиц_рия \nъ или а?",L"а"},
 		{L"Как се пише \n'безпорно'\n'безспорно'?",L"безспорно"},
 		{L"Как се пише \n'отвертка'\n'отверка'?",L"отвертка"},
-		{L"Как се пише \nмер_дия\nу или о?",L"у"},
+		{L"Как се пише \nмер_дия\nо или у?",L"у"},
 		{L"Как се пише \nас_алт\nф или в?",L"ф"},
-		{L"Как се пише \n'здравейте'\n'здравей те'?",L"здравейте"},
+		{L"Как се пише \n'здравей те'\n'здравейте'?",L"здравейте"},
 		{L"Как се пише \nарг_мент\nо или у?",L"у"},
 		{L"Как се пише \n'анцуг'\n'анцунг'?",L"анцуг"},
-		{L"Как се пише \nкор_гирам \nи или е?",L"и"},
+		{L"Как се пише \nкор_гирам \nе или и?",L"и"},
 		{L"Как се пише \nмани_ \nя или а?",L"я"},
-		{L"Как се пише \n'чувствам'\n'чуствам'?",L"чувствам"},
+		{L"Как се пише \n'чуствам'\n'чувствам'?",L"чувствам"},
 		{L"Как се пише \n'невинаги'\n'не винаги'?",L"невинаги"},
 		{L"", L""}
 		
@@ -54,6 +51,8 @@ void field::draw(sf::RenderWindow& window) {
 	window.draw(this->input);
 }
 
+// get a random question
+// takes integer up to 15 as an argument
 void field::setQuestion(int row) {
 	if (row == 15) {
 		srand((int)time(0));
@@ -80,7 +79,7 @@ void field::setQuestion(int row) {
 		case 2:
 			num1 = rand() % 10;
 			num2 = rand() % 10;
-			this->QNAV[row].question = L"Колко е \n" + to_wstring(num1) + L" по " + to_wstring(num2) + L"?";
+			this->QNAV[row].question = L"Колко е \n" + to_wstring(num1) + L" x " + to_wstring(num2) + L"?";
 			this->QNAV[row].answer = to_wstring(num1 * num2);
 			break;
 

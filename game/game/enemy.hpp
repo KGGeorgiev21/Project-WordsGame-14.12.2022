@@ -4,6 +4,7 @@
 
 class enemy {
 protected:
+	sf::IntRect uvRect;
 	sf::RectangleShape enemyBod;
 	sf::RectangleShape healthBar;
 
@@ -11,10 +12,10 @@ protected:
 
 public:
 	int attack;
-	int hp;
+	float hp;
 	string name;
 
-	enemy(int maxHp, int attack);
+	enemy(int maxHp, int attack, sf::Texture& texture);
 	~enemy();
 
 	void setPos(sf::Vector2f pos);

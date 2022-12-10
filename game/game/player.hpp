@@ -12,7 +12,7 @@ protected:
 
 public:
 	int money;
-	int hp;
+	float hp;
 	int attack;
 
 	player(float posX, float posY, int money, int attack, int maxHp);
@@ -25,7 +25,6 @@ public:
 	void setSize(sf::Vector2f size);
 	void setRotation(float degrees);
 	void rotate(float degrees);
-	void resetHp();
 	bool takeDamage(int damage);
 	float getRotation();
 

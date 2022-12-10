@@ -155,12 +155,14 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="npc.cpp" />
     <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="enemy.hpp" />
     <ClInclude Include="game.hpp" />
     <ClInclude Include="input.hpp" />
+    <ClInclude Include="npc.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="precompile.hpp" />
   </ItemGroup>
