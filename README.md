@@ -6,7 +6,7 @@
   <h1>🧑‍🤝‍🧑 Our Team </h1>
   <p>
   
-1. **Yanislav Yanev** - **Scrum trainer**	
+1. **Kaloyan Georgiev** - **Scrum trainer**	
    > ***GitHub profile***: [***KGGeorgiev21***](https://github.com/KGGeorgiev21)	
 
 2. **Ivailo Bachvarov** - **Backend Developer** 
