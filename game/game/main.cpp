@@ -12,7 +12,7 @@ void hideConsole()
 int main()
 {
     hideConsole();
-    gameClass game(720, 1280, "Test");
+    gameClass game(720, 1280, "Main");
     game.initWindow();
     return 0;
 }

@@ -127,6 +127,7 @@ void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
 
 // draw the fight scene
 void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clock& clock, int npcNum, sf::Text& money, sf::Texture& texture) {
+	this->window.setTitle("Fight");
 	// set random rand seed
 	srand((int)time(0));
 
@@ -318,6 +319,8 @@ void gameClass::initWindow() {
 // update the window
 // handles main game logic and stores variables
 void gameClass::mainScene() {
+	this->window.setTitle("Main");
+
 	sf::Text confirmation;
 	sf::Text money;
 	sf::Font font;
