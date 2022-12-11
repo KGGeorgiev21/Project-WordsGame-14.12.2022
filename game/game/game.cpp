@@ -103,6 +103,7 @@ void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
 						}
 					}
 					else if ((event.mouseButton.x >= quitButton.getPosition().x - 100 && event.mouseButton.x <= quitButton.getPosition().x + 100) && (event.mouseButton.y >= quitButton.getPosition().y && event.mouseButton.y <= quitButton.getPosition().y + 88)) {
+						this->window.setTitle("Main");
 						return;
 					}
 				}
@@ -252,6 +253,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 							if (dead) {
 								fightEnded = true;
 								plr.setSize(sf::Vector2f(88, 111));
+								this->window.setTitle("Main");
 							}
 							animateRotation = 'p';
 						}
