@@ -101,7 +101,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 
 			this->window.clear();
 
-			plr.draw(this->window, true);
+			plr.draw(this->window, dt,true);
 			enemy.draw(this->window, true);
 			this->window.draw(money);
 
@@ -135,8 +135,6 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 							if (dead) {
 								fightEnded = true;
 								plr.setSize(sf::Vector2f(62.5, 100));
-								plr.takeDamage(1);
-
 							}
 							animateRotation = 'p';
 						}
@@ -179,7 +177,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 
 		this->window.clear();
 
-		plr.draw(this->window, true);
+		plr.draw(this->window, dt,true);
 		enemy.draw(this->window, true);
 		this->window.draw(money);
 
@@ -207,10 +205,12 @@ void gameClass::mainScene() {
 	sf::Text money;
 	sf::Font font;
 	sf::Sprite gameMap;
+	sf::Sprite keyboardE;
 	sf::Texture inputBgT;
 	sf::Texture gameMapT;
 	sf::Texture npcT;
 	sf::Texture bossT;
+	sf::Texture eKeyT;
 	sf::Clock clock;
 	sf::Time dt;
 
@@ -229,15 +229,19 @@ void gameClass::mainScene() {
 	if (!bossT.loadFromFile("assets/boss.png")) {
 		cout << "failed to load boss.png" << endl;
 	}
+	if (!eKeyT.loadFromFile("assets/key.png")) {
+		cout << "failed to load key.png" << endl;
+	}
 
 	gameMap.setTexture(gameMapT);
+	keyboardE.setTexture(eKeyT);
 	money.setFont(font);
 	money.setPosition(60,30);
 	money.setCharacterSize(34);
 	money.setFillColor(sf::Color(255, 220, 0));
 
 	field inputField(sf::Color(255, 255, 255, 128), 400, 275, 1280 / 2 - 400 / 2, 720 / 2 - 275 / 2, 1.0f, 1.0f, font, inputBgT);
-	player plr(1280 / 2, 539, 0, 20, 100);
+	player plr(sf::Vector2f(1280/2, 539), 0, 20, 100, 2, 0.3);
 	npc npc1(npcT, 2, 0.3, sf::Vector2f(794, 539));
 	npc npc2(npcT, 2, 0.3, sf::Vector2f(994, 539));
 	npc boss(bossT, 2, 0.3, sf::Vector2f(1194, 539));
@@ -266,9 +270,28 @@ void gameClass::mainScene() {
 			}
 		}
 
+
 		this->window.clear();
 
 		this->window.draw(gameMap);
+
+		if (plr.getPos().x > npc1.body.getPosition().x - 63 && plr.getPos().x < npc1.body.getPosition().x + 63) {
+			keyboardE.setPosition(sf::Vector2f(npc1.body.getPosition().x + 30, npc1.body.getPosition().y - 116 - 19));
+			window.draw(keyboardE);
+		}
+		else if (plr.getPos().x > npc2.body.getPosition().x - 63 && plr.getPos().x < npc2.body.getPosition().x + 63) {
+			keyboardE.setPosition(sf::Vector2f(npc2.body.getPosition().x + 30, npc2.body.getPosition().y - 116 - 19));
+			window.draw(keyboardE);
+		}
+		else if (plr.getPos().x > boss.body.getPosition().x - 63 && plr.getPos().x < boss.body.getPosition().x + 63) {
+			keyboardE.setPosition(sf::Vector2f(boss.body.getPosition().x + 30, boss.body.getPosition().y - 116 - 19));
+			window.draw(keyboardE);
+		}
+		else if (plr.getPos().x > 34 && plr.getPos().x < 259) {
+			keyboardE.setPosition(sf::Vector2f(205, 372));
+			window.draw(keyboardE);
+		}
+
 
 		npc1.update(dt);
 		npc2.update(dt);
@@ -279,8 +302,8 @@ void gameClass::mainScene() {
 		boss.draw(this->window);
 		this->window.draw(money);
 
-		plr.update(event, dt.asSeconds());
-		plr.draw(this->window, false);
+		plr.update(event, dt);
+		plr.draw(this->window, dt, false);
 
 		this->window.display();
 

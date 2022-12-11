@@ -1,7 +1,7 @@
 #include "player.hpp"
 
 // initialize the player with given values
-player::player(float posX, float posY, int money, int attack, int maxHp) {
+player::player(sf::Vector2f pos, int money, int attack, int maxHp, int imageCount, float switchTime) {
 	this->posX = posX;
 	this->posY = posY;
 	this->money = money;
@@ -10,9 +10,21 @@ player::player(float posX, float posY, int money, int attack, int maxHp) {
 	this->hp = maxHp;
 	this->speed = 250;
 
-	this->plrBod.setSize(sf::Vector2f(62.5, 100));
-	this->plrBod.setOrigin(62.5 / 2, 100);
-	this->plrBod.setPosition(posX, posY);
+	this->textureLeft.loadFromFile("assets/left.png");
+	this->textureRight.loadFromFile("assets/right.png");
+	this->textureIdle.loadFromFile("assets/idle.png");
+
+	this->imageCount = imageCount;
+	this->switchTime = switchTime;
+	this->totalTime = 0.f;
+	this->currentImage = 0;
+	this->uvRect.width = this->textureIdle.getSize().x / float(imageCount);
+	this->uvRect.height = this->textureIdle.getSize().y - 8;
+	this->uvRect.top = 0;
+	this->plrBod.setSize(sf::Vector2f(90, 116));
+	this->plrBod.setOrigin(90 / 2, 116);
+	this->plrBod.setPosition(pos);
+	this->plrBod.setTexture(&this->textureIdle);
 
 	this->healthBar.setFillColor(sf::Color(0, 252, 36));
 	this->healthBar.setSize(sf::Vector2f(200, 24));
@@ -25,21 +37,54 @@ player::~player() {
 }
 
 // handle input logic for player
-void player::update(sf::Event& event, float dt) {
+void player::update(sf::Event& event, sf::Time dt) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		this->plrBod.move(-1 * dt * this->speed, 0);
+		this->plrBod.move(-1 * dt.asSeconds() * this->speed, 0);
+		if (this->plrBod.getTexture() != &this->textureLeft) {
+			this->plrBod.setTexture(&this->textureLeft);
+			cout << "setting left" << endl;
+		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		this->plrBod.move(1 * dt * this->speed, 0);
+		this->plrBod.move(1 * dt.asSeconds() * this->speed, 0);
+		if (this->plrBod.getTexture() != &this->textureRight) {
+			this->plrBod.setTexture(&this->textureRight);
+			cout << "setting right" << endl;
+		}
+	}
+	else {
+		if (this->plrBod.getTexture() != &this->textureIdle) {
+			this->plrBod.setTexture(&this->textureIdle);
+			cout << "setting idle" << endl;
+		}
 	}
 }
 
 // draw the player to the screen
-void player::draw(sf::RenderWindow& window, bool inFight) {
-	window.draw(this->plrBod);
+void player::draw(sf::RenderWindow& window, sf::Time dt, bool inFight) {
 	if (inFight) {
 		window.draw(this->healthBar);
 	}
+	else {
+		this->totalTime += dt.asSeconds();
+
+		if (this->totalTime >= this->switchTime)
+		{
+			this->totalTime -= this->switchTime;
+			this->currentImage++;
+
+			if (this->currentImage >= this->imageCount)
+			{
+				this->currentImage = 0;
+			}
+		}
+
+		this->uvRect.left = this->currentImage * this->uvRect.width;
+		this->uvRect.width = abs(this->uvRect.width);
+
+		this->plrBod.setTextureRect(this->uvRect);
+	}
+	window.draw(this->plrBod);
 }
 
 // set position of player sprite
