@@ -15,10 +15,7 @@ npc::npc(sf::Texture& texture, int imageCount, float switchTime, sf::Vector2f po
 	this->body.setTexture(&texture);
 }
 
-npc::~npc() {
-
-}
-
+// update npc sprite
 void npc::update(sf::Time dt) {
 	this->totalTime += dt.asSeconds();
 
@@ -39,6 +36,7 @@ void npc::update(sf::Time dt) {
 	this->body.setTextureRect(this->uvRect);
 }
 
+// draw npc
 void npc::draw(sf::RenderWindow& window) {
 	window.draw(this->body);
 }

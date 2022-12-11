@@ -12,28 +12,29 @@ enemy::enemy(int maxHp, int attack, sf::Texture& texture) {
 
 	this->enemyBod.setTexture(&texture);
 	this->enemyBod.setTextureRect(this->uvRect);
-	this->enemyBod.setSize(sf::Vector2f(90, 116));
-	this->enemyBod.setOrigin(45, 116);
-	this->enemyBod.setPosition(sf::Vector2f(1230, 334));
+	this->enemyBod.setSize(sf::Vector2f(99, 125));
+	this->enemyBod.setOrigin(49.5, 125);
+	this->enemyBod.setPosition(sf::Vector2f(1230, 354));
 
+	this->healthBar.setOutlineThickness(5);
+	this->healthBar.setOutlineColor(sf::Color::Black);
 	this->healthBar.setFillColor(sf::Color(163, 255, 0));
 	this->healthBar.setSize(sf::Vector2f(200, 24));
 	this->healthBar.setOrigin(100, 12);
-	this->healthBar.setPosition(sf::Vector2f(990, 144));
+	this->healthBar.setPosition(sf::Vector2f(1065, 300));
 }
 
-enemy::~enemy() {
-
-}
-
+// set enemy position
 void enemy::setPos(sf::Vector2f pos) {
 	this->enemyBod.setPosition(pos);
 }
 
+// move enemy
 void enemy::move(sf::Vector2f offset) {
 	this->enemyBod.move(offset);
 }
 
+// draw enemy
 void enemy::draw(sf::RenderWindow& window, bool inFight) {
 	window.draw(this->enemyBod);
 	if (inFight) {
@@ -41,15 +42,14 @@ void enemy::draw(sf::RenderWindow& window, bool inFight) {
 	}
 }
 
+// take damage and update healthbar
 bool enemy::takeDamage(int damage) {
 	this->hp -= damage;
-
-	cout << (this->hp / this->maxHp) * 100 << endl;
 
 	if ((this->hp / this->maxHp) * 100 <= 0) {
 		this->hp = maxHp;
 		this->healthBar.setSize(sf::Vector2f(200, 24));
-		this->healthBar.setPosition(sf::Vector2f(990, 144));
+		this->healthBar.setPosition(sf::Vector2f(1065, 300));
 		this->healthBar.setFillColor(sf::Color(163, 255, 0));
 		return true;
 	}
@@ -60,26 +60,36 @@ bool enemy::takeDamage(int damage) {
 		this->healthBar.setFillColor(sf::Color(255, 220, 0));
 	}
 
-	this->healthBar.move(sf::Vector2f(damage / (this->maxHp / 100), 0));
 	this->healthBar.setSize(sf::Vector2f(200 * (this->hp / this->maxHp), this->healthBar.getSize().y));
+
 
 	return false;
 }
 
+// set fill of enemy sprite
+void enemy::setFill(sf::Color color) {
+	this->enemyBod.setFillColor(color);
+}
+
+// set rotation of enemy
 void enemy::setRotation(float angle)
 {
 	this->enemyBod.setRotation(angle);
 }
 
+// rotate enemy
 void enemy::rotate(float angle) {
 	this->enemyBod.rotate(angle);
 }
 
+// get rotation of enemy
 float enemy::getRotation()
 {
 	return this->enemyBod.getRotation();
 }
 
+// get position of enemy
+// returns Vector2f of the position
 sf::Vector2f enemy::getPos() {
 	return this->enemyBod.getPosition();
 }

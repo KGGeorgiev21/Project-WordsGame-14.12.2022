@@ -14,10 +14,10 @@ private:
 	
 public:
 	gameClass(int height, int width, string title);
-	~gameClass();
 
 	void initWindow();
 	void mainScene();
 
 	void fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clock& clock, int npcNum, sf::Text& money, sf::Texture& texture);
+	void drawShop(sf::Event &event, sf::Text &money, player &plr);
 };

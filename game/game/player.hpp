@@ -2,16 +2,14 @@
 
 class player {
 protected:
+	
 	sf::RectangleShape healthBar;
 	sf::Texture textureLeft;
 	sf::Texture textureRight;
 	sf::Texture textureIdle;
 
-	float posX;
-	float posY;
 	float switchTime;
 	float totalTime;
-	int maxHp;
 	int speed;
 	int imageCount;
 	int currentImage;
@@ -21,11 +19,13 @@ public:
 	sf::RectangleShape plrBod;
 
 	int money;
+	int maxHp;
 	float hp;
 	int attack;
+	int priceDamage;
+	int priceHealth;
 
 	player(sf::Vector2f pos, int money, int attack, int maxHp, int imageCount, float switchTime);
-	~player();
 
 	void update(sf::Event& event, sf::Time dt);
 	void draw(sf::RenderWindow& window, sf::Time dt, bool inFight);
@@ -35,6 +35,7 @@ public:
 	void setRotation(float degrees);
 	void rotate(float degrees);
 	bool takeDamage(int damage);
+	void setFill(sf::Color);
 	float getRotation();
 
 	sf::Vector2f getPos();

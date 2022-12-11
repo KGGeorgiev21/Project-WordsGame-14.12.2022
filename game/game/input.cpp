@@ -39,11 +39,6 @@ field::field(sf::Color bgColor, int sizeX, int sizeY, float posX, float posY, fl
 	};
 }
 
-field::~field() 
-{
-
-}
-
 // draw input field to the screen
 void field::draw(sf::RenderWindow& window) {
 	window.draw(this->background);
@@ -109,6 +104,7 @@ void field::setQuestion(int row) {
 	this->question.setString(this->QNAV[row].question);
 }
 
+// check if answer is correct
 bool field::checkAnswer(int row) {
 	return this->input.getString() == this->QNAV[row].answer;
 }

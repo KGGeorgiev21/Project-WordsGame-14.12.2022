@@ -14,14 +14,13 @@ protected:
 	sf::Sprite background;
 
 public:
-	field(sf::Color bgColor, int sizeX, int sizeY, float posX, float posY, float scaleX, float scaleY, sf::Font& font, sf::Texture& backgroundTexture);
 	sf::Text input;
+
+	field(sf::Color bgColor, int sizeX, int sizeY, float posX, float posY, float scaleX, float scaleY, sf::Font& font, sf::Texture& backgroundTexture);
 
 	void draw(sf::RenderWindow& window);
 
 	void setQuestion(int row);
 
 	bool checkAnswer(int row);
-
-	~field();
 };
