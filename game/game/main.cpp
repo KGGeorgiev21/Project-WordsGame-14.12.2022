@@ -6,7 +6,7 @@
 void hideConsole()
 {
     HWND hWnd = GetConsoleWindow();
-    ShowWindow(hWnd, SW_HIDE);
+    ShowWindow(hWnd, SW_SHOW);
 }
 
 int main()

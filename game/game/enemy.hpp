@@ -24,6 +24,7 @@ public:
 	void setFill(sf::Color color);
 	void setRotation(float angle);
 	void rotate(float angle);
+	void setScale(float scaleX, float scaleY);
 	float getRotation();
 
 	sf::Vector2f getPos();

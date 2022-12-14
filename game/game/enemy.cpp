@@ -82,6 +82,10 @@ void enemy::rotate(float angle) {
 	this->enemyBod.rotate(angle);
 }
 
+void enemy::setScale(float scaleX, float scaleY) {
+	this->enemyBod.setScale(scaleX, scaleY);
+}
+
 // get rotation of enemy
 float enemy::getRotation()
 {

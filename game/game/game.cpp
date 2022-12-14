@@ -9,6 +9,52 @@ gameClass::gameClass(int height, int width, string title) {
 	this->title = title;
 }
 
+void gameClass::mainMenu() {
+	sf::Sprite menu;
+	sf::Sprite play;
+	sf::Sprite quit;
+	sf::Texture menuT;
+	sf::Texture playT;
+	sf::Texture quitT;
+	sf::Event event;
+
+	menuT.loadFromFile("assets/menuBackground.png");
+	playT.loadFromFile("assets/playButton.png");
+	quitT.loadFromFile("assets/quitButton.png");
+	menu.setTexture(menuT);
+	play.setTexture(playT);
+	quit.setTexture(quitT);
+
+	play.setOrigin(sf::Vector2f(110, 29));
+	play.setPosition(sf::Vector2f(1280/2, 720/2 - 58));
+	quit.setOrigin(sf::Vector2f(110, 29));
+	quit.setPosition(sf::Vector2f(1280/2, 720/2 + 58));
+
+	while (this->window.isOpen()) {
+		while (this->window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed)
+				this->window.close();
+
+			if (event.type == sf::Event::MouseButtonPressed) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					if ((event.mouseButton.x > play.getPosition().x - 110 && event.mouseButton.x < play.getPosition().x + 110) && (event.mouseButton.y > play.getPosition().y - 29 && event.mouseButton.y < play.getPosition().y + 29)) {
+						this->mainScene();
+					}
+					if ((event.mouseButton.x > quit.getPosition().x - 110 && event.mouseButton.x < quit.getPosition().x + 110) && (event.mouseButton.y > quit.getPosition().y - 29 && event.mouseButton.y < quit.getPosition().y + 29)) {
+						this->window.close();
+					}
+				}
+			}
+		}
+
+		this->window.clear();
+		this->window.draw(menu);
+		this->window.draw(play);
+		this->window.draw(quit);
+		this->window.display();
+	}
+}
+
 // draw the shop
 void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
 	sf::Sprite shop;
@@ -126,9 +172,77 @@ void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
 	}
 }
 
+void gameClass::drawCutscene(sf::Event& event, sf::Sprite& background, enemy& enemy) {
+	sf::Sprite endScreen;
+	sf::Texture endScreenT;
+	sf::Text endTitle;
+	sf::Text endText;
+	sf::Font font;
+	sf::Time dt;
+	sf::Clock clock;
+	bool displayCredits = false;
+	float scale = 1.0;
+	float transparency = 255;
+
+	endScreenT.loadFromFile("assets/shop.png");
+	font.loadFromFile("font.ttf");
+	endScreen.setTexture(endScreenT);
+	endTitle.setFont(font);
+	endText.setFont(font);
+	endTitle.setCharacterSize(72);
+	endText.setCharacterSize(68);
+	endTitle.setString(L"Край");
+	endText.setString(L"Благодаря, че играхте!");
+	endTitle.setPosition(sf::Vector2f(1280/2 - 77, 20));
+	endText.setPosition(sf::Vector2f(1280 / 2 - 400, 720 / 2 - 72));
+	
+	while (this->window.isOpen()) {
+		while (this->window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed)
+				this->window.close();
+		}
+
+		if (scale < 1.5) {
+			scale += 1 * dt.asSeconds();
+			background.setScale(scale, scale);
+			enemy.setScale(scale, scale);
+			background.move(-840 * dt.asSeconds(), -240 * dt.asSeconds());
+			enemy.move(sf::Vector2f(-100 * dt.asSeconds(), 240 * dt.asSeconds()));
+		}
+		else {
+			if (enemy.getRotation() < 90) {
+				enemy.rotate(90 * dt.asSeconds());
+			}
+			else {
+				if (transparency > 0) {
+					transparency -= 255 * dt.asSeconds();
+					enemy.setFill(sf::Color(255,255,255, transparency));
+				}
+				else {
+					displayCredits = true;
+				}
+			}
+		}
+
+		this->window.clear();
+		if (displayCredits) {
+			this->window.draw(endScreen);
+			this->window.draw(endTitle);
+			this->window.draw(endText);
+		}
+		else {
+			this->window.draw(background);
+			enemy.draw(this->window, false);
+			dt = clock.restart();
+		}
+		this->window.display();
+	}
+}
+
 // draw the fight scene
 void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clock& clock, int npcNum, sf::Text& money, sf::Texture& texture) {
 	this->window.setTitle("Fight");
+
 	// set random rand seed
 	srand((int)time(0));
 
@@ -251,6 +365,10 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 						else {
 							bool dead = plr.takeDamage(enemy.attack);
 							if (dead) {
+								if (npcNum == 3) {
+									this->drawCutscene(event, background, enemy);
+									break;
+								}
 								fightEnded = true;
 								plr.setSize(sf::Vector2f(88, 111));
 								this->window.setTitle("Main");
@@ -259,6 +377,10 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 						}
 					}
 					else {
+						if (npcNum == 3) {
+							this->drawCutscene(event, background, enemy);
+							break;
+						}
 						enemy.takeDamage(100000);
 						plr.money += npcNum * npcNum * 25;
 						money.setString("$" + to_string(plr.money));
@@ -315,7 +437,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 void gameClass::initWindow() {
 	this->window.create(sf::VideoMode(this->windowWidth, this->windowHeight), this->title, sf::Style::Close);
 	this->window.setFramerateLimit(240);
-	mainScene();
+	mainMenu();
 }
 
 // update the window
