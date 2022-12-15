@@ -368,6 +368,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 							if (dead) {
 								plr.money += npcNum * npcNum * 25;
 								money.setString("$" + to_string(plr.money));
+								this->drawCutscene(event, background, enemy);
 							}
 							animateRotation = 'e';
 						}
@@ -375,7 +376,6 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 							bool dead = plr.takeDamage(enemy.attack);
 							if (dead) {
 								if (npcNum == 3) {
-									this->drawCutscene(event, background, enemy);
 									break;
 								}
 								fightEnded = true;
