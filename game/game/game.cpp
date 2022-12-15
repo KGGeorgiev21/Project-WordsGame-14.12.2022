@@ -26,9 +26,9 @@ void gameClass::mainMenu() {
 	quit.setTexture(quitT);
 
 	play.setOrigin(sf::Vector2f(110, 29));
-	play.setPosition(sf::Vector2f(1280/2, 720/2 - 58));
+	play.setPosition(sf::Vector2f(1280 / 2, 720 / 2 - 58));
 	quit.setOrigin(sf::Vector2f(110, 29));
-	quit.setPosition(sf::Vector2f(1280/2, 720/2 + 58));
+	quit.setPosition(sf::Vector2f(1280 / 2, 720 / 2 + 58));
 
 	while (this->window.isOpen()) {
 		while (this->window.pollEvent(event)) {
@@ -56,7 +56,7 @@ void gameClass::mainMenu() {
 }
 
 // draw the shop
-void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
+void gameClass::drawShop(sf::Event& event, sf::Text& money, player& plr) {
 	sf::Sprite shop;
 	sf::Texture shopT;
 	sf::Text title;
@@ -91,7 +91,7 @@ void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
 	healthUpgrade.setPosition(sf::Vector2f(392, 350));
 	button1.setFillColor(sf::Color::Green);
 	button1.setSize(sf::Vector2f(150, 75));
-	button1.setOrigin(0, 75/2);
+	button1.setOrigin(0, 75 / 2);
 	button1.setPosition(sf::Vector2f(713, 285));
 	button2.setFillColor(sf::Color::Green);
 	button2.setSize(sf::Vector2f(150, 75));
@@ -99,7 +99,7 @@ void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
 	button2.setPosition(sf::Vector2f(713, 383));
 	quitButton.setSize(sf::Vector2f(200, 88));
 	quitButton.setOrigin(100, 0);
-	quitButton.setPosition(sf::Vector2f(1280/2, 553));
+	quitButton.setPosition(sf::Vector2f(1280 / 2, 553));
 	quitButton.setFillColor(sf::Color::Red);
 	priceDamageText.setString("$" + to_string(plr.priceDamage));
 	priceDamageText.setCharacterSize(40);
@@ -110,7 +110,7 @@ void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
 	quitText.setString("close");
 	quitText.setCharacterSize(40);
 	quitText.setOrigin(sf::Vector2f(12 * 5, 20));
-	quitText.setPosition(1280/2, 553 + 40);
+	quitText.setPosition(1280 / 2, 553 + 40);
 
 	this->window.setTitle("Shop");
 
@@ -122,7 +122,7 @@ void gameClass::drawShop(sf::Event &event, sf::Text &money, player &plr) {
 
 			if (event.type == sf::Event::MouseButtonPressed) {
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-					if ((event.mouseButton.x >= button1.getPosition().x && event.mouseButton.x <= button1.getPosition().x + 150) && (event.mouseButton.y <= button1.getPosition().y + 75/2 && event.mouseButton.y >= button1.getPosition().y - 75/2)) {
+					if ((event.mouseButton.x >= button1.getPosition().x && event.mouseButton.x <= button1.getPosition().x + 150) && (event.mouseButton.y <= button1.getPosition().y + 75 / 2 && event.mouseButton.y >= button1.getPosition().y - 75 / 2)) {
 						if (plr.money >= plr.priceDamage) {
 							plr.attack += 50;
 							plr.money -= plr.priceDamage;
@@ -180,6 +180,8 @@ void gameClass::drawCutscene(sf::Event& event, sf::Sprite& background, enemy& en
 	sf::Font font;
 	sf::Time dt;
 	sf::Clock clock;
+	sf::RectangleShape cinematicBar1;
+	sf::RectangleShape cinematicBar2;
 	bool displayCredits = false;
 	float scale = 1.0;
 	float transparency = 255;
@@ -193,9 +195,14 @@ void gameClass::drawCutscene(sf::Event& event, sf::Sprite& background, enemy& en
 	endText.setCharacterSize(68);
 	endTitle.setString(L"Край");
 	endText.setString(L"Благодаря, че играхте!");
-	endTitle.setPosition(sf::Vector2f(1280/2 - 77, 20));
+	endTitle.setPosition(sf::Vector2f(1280 / 2 - 77, 20));
 	endText.setPosition(sf::Vector2f(1280 / 2 - 400, 720 / 2 - 72));
-	
+	cinematicBar1.setSize(sf::Vector2f(1280, 100));
+	cinematicBar2.setSize(sf::Vector2f(1280, 100));
+	cinematicBar2.setPosition(0, 620);
+	cinematicBar1.setFillColor(sf::Color::Black);
+	cinematicBar2.setFillColor(sf::Color::Black);
+
 	while (this->window.isOpen()) {
 		while (this->window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
@@ -216,7 +223,7 @@ void gameClass::drawCutscene(sf::Event& event, sf::Sprite& background, enemy& en
 			else {
 				if (transparency > 0) {
 					transparency -= 255 * dt.asSeconds();
-					enemy.setFill(sf::Color(255,255,255, transparency));
+					enemy.setFill(sf::Color(255, 255, 255, transparency));
 				}
 				else {
 					displayCredits = true;
@@ -233,6 +240,8 @@ void gameClass::drawCutscene(sf::Event& event, sf::Sprite& background, enemy& en
 		else {
 			this->window.draw(background);
 			enemy.draw(this->window, false);
+			this->window.draw(cinematicBar1);
+			this->window.draw(cinematicBar2);
 			dt = clock.restart();
 		}
 		this->window.display();
@@ -333,7 +342,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 			this->window.clear();
 
 			this->window.draw(background);
-			plr.draw(this->window, dt,true);
+			plr.draw(this->window, dt, true);
 			enemy.draw(this->window, true);
 			this->window.draw(money);
 
@@ -419,7 +428,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 		this->window.clear();
 
 		this->window.draw(background);
-		plr.draw(this->window, dt,true);
+		plr.draw(this->window, dt, true);
 		enemy.draw(this->window, true);
 		this->window.draw(money);
 
@@ -468,12 +477,12 @@ void gameClass::mainScene() {
 	gameMap.setTexture(gameMapT);
 	keyboardE.setTexture(eKeyT);
 	money.setFont(font);
-	money.setPosition(60,30);
+	money.setPosition(60, 30);
 	money.setCharacterSize(34);
 	money.setFillColor(sf::Color(255, 220, 0));
 
 	field inputField(sf::Color(255, 255, 255, 128), 400, 275, 1280 / 2 - 400 / 2, 720 / 2 - 275 / 2, 1.0f, 1.0f, font, inputBgT);
-	player plr(sf::Vector2f(1280/2, 539), 0, 20, 100, 2, 0.3);
+	player plr(sf::Vector2f(1280 / 2, 539), 0, 20, 100, 2, 0.3);
 	npc npc1(npcT, 2, 0.3, sf::Vector2f(794, 539));
 	npc npc2(npcT, 2, 0.3, sf::Vector2f(994, 539));
 	npc boss(bossT, 2, 0.3, sf::Vector2f(1194, 539));
