@@ -268,7 +268,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 	bool inPos = false;
 	char animateRotation = 'f';
 	int rotatePart = 1;
-	int row = rand() % 16;
+	int row = rand() % 21;
 	wstring answer;
 
 	enemy enemy(npcNum * npcNum * 100, npcNum * 20, texture);
@@ -395,7 +395,7 @@ void gameClass::fightScene(player& plr, field& inputField, sf::Time& dt, sf::Clo
 						money.setString("$" + to_string(plr.money));
 						animateRotation = 'e';
 					}
-					row = rand() % 16;
+					row = rand() % 21;
 					inputField.setQuestion(row);
 					answer = L"";
 				}

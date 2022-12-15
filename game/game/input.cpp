@@ -34,6 +34,10 @@ field::field(sf::Color bgColor, int sizeX, int sizeY, float posX, float posY, fl
 		{L"Как се пише \nмани_ \nя или а?",L"я"},
 		{L"Как се пише \n'чуствам'\n'чувствам'?",L"чувствам"},
 		{L"Как се пише \n'невинаги'\n'не винаги'?",L"невинаги"},
+		{L"Как се пише \n'кебабче'\n'кебапче'", L"кебапче"},
+		{L"Как се пише \n'кьофте'\n'кюфте'", L"кюфте"},
+		{L"Как се пише \n'преосмислям'\n'преусмислям'", L"преосмилям"},
+		{L"Как се пише \n'сбъркал'\n'збъркал'", L"збъркал"},
 		{L"", L""}
 		
 	};
@@ -49,7 +53,7 @@ void field::draw(sf::RenderWindow& window) {
 // get a random question
 // takes integer up to 15 as an argument
 void field::setQuestion(int row) {
-	if (row == 15) {
+	if (row >= 20) {
 		srand((int)time(0));
 
 		int op = rand() % 5;
